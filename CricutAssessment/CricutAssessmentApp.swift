@@ -11,7 +11,7 @@ import SwiftUI
 struct CricutAssessmentApp: App {
     var body: some Scene {
         WindowGroup {
-            ShapesGridView()
+            AllShapesView()
         }
     }
 }
