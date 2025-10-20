@@ -16,54 +16,51 @@ import SwiftUI
 struct AllShapesView: View {
     
     @State var dynamicButtons = DynamicShapeButtons()
-    let editableShape = "Circle"
+    @State var shapes: [ShapeGridItem] = []
+    let editableShape = ShapeType.circle
     
     var body: some View {
         
         
         NavigationView {
-            VStack{
+            VStack {
+                // Header
                 HStack {
-                    Button("Clear All"){
-                        
+                    Button("Clear All") {
+                        shapes = []
                     }.padding(.leading)
                     Spacer()
-                    NavigationLink("Edit \(editableShape)s"){
-                        EditableShapesView(shapeName: editableShape)
+                    NavigationLink("Edit \(editableShape.rawValue)s") {
+                        EditableShapesView(editableShapeType: editableShape, shapes: $shapes)
                     }.padding(.trailing)
                 }
+                
                 // Scrollable grid view for shapes
-                ScrollView {
-                    LazyVGrid(columns: [
-                        GridItem(.flexible()),
-                        GridItem(.flexible()),
-                        GridItem(.flexible())
-                    ]) {
-                        ForEach(0..<10){ index in
-                            Rectangle()
-                                .frame(height: 50)
-                        }
-                    }
-                }
+                ShapesGridView(shapes: $shapes)
+
                 // Footer
                 HStack {
-                    
                     // Display each button with spaces between
                     Spacer()
-                    ForEach(dynamicButtons.buttons){ button in
-                        Button(button.name){
-                            
+                    ForEach(dynamicButtons.buttons) { button in
+                        Button(button.name) {
+                            let shape = ShapeType(rawValue: button.drawPath)
+                            if shape != nil {
+                                shapes.append(ShapeGridItem(shapeType: shape!))
+                            } else {
+                                print("Recieved an invalid draw path from the buttons request: \(button.drawPath)")
+                                dynamicButtons.hadError = true
+                            }
                         }
                         Spacer()
                     }
                 }
                 .padding()
-                .alert("Shape Buttons", isPresented: $dynamicButtons.hadError){
+                .alert("Shape Buttons", isPresented: $dynamicButtons.hadError) {
                 } message: {
                     Text("There was an issue getting the shape buttons. Please contact customer support for more help.")
                 }
             }
-            
         }
     }
 }

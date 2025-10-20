@@ -11,10 +11,11 @@
 import Foundation
 
 @Observable
-class DynamicShapeButtons{
+class DynamicShapeButtons {
     var buttons: [ShapeButton] = []
     var hadError: Bool = false
-    init(){
+    
+    init() {
         Task{
             do{
                 buttons = try await HttpRequestHandler().getShapeButtons().buttons

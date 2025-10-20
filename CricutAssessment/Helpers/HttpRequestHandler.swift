@@ -30,7 +30,7 @@ struct ShapeButton: Decodable, Identifiable {
     let id = UUID()
     let name: String
     let drawPath: String
-    
+
     enum CodingKeys: String, CodingKey{
         case name = "name"
         case drawPath = "draw_path"
